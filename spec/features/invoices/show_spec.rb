@@ -108,4 +108,13 @@ RSpec.describe "invoices show" do
     expect(page).to have_content("Total Revenue: 162")
     expect(page).to have_content("Total Discounted Revenue: 147.6")
   end
+
+  it "US 7 - Link to applied discounts" do
+    @bulk_discount_1 = BulkDiscount.create!(quantity_threshold: 10, percent_discount: 20, merchant_id: @merchant1.id)
+    @bulk_discount_2 = BulkDiscount.create!(quantity_threshold: 20, percent_discount: 30, merchant_id: @merchant1.id)
+
+    visit merchant_invoice_path(@merchant1, @invoice_1)
+    save_and_open_page
+    expect(page).to have_link("Bulk Discount ID #{@bulk_discount_1.id}")
+  end
 end
