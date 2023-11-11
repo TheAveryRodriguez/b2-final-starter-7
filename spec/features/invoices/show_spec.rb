@@ -76,7 +76,6 @@ RSpec.describe "invoices show" do
     expect(page).to have_content(@ii_1.quantity)
     expect(page).to have_content(@ii_1.unit_price)
     expect(page).to_not have_content(@ii_4.unit_price)
-
   end
 
   it "shows the total revenue for this invoice" do
@@ -100,4 +99,13 @@ RSpec.describe "invoices show" do
     end
   end
 
+  it "US6 - shows the total revenue and total discounted revenue for this invoice" do
+    @bulk_discount_1 = BulkDiscount.create!(quantity_threshold: 10, percent_discount: 15, merchant_id: @merchant1.id)
+    @bulk_discount_2 = BulkDiscount.create!(quantity_threshold: 20, percent_discount: 30, merchant_id: @merchant1.id)
+
+    visit merchant_invoice_path(@merchant1, @invoice_1)
+
+    expect(page).to have_content("Total Revenue: #{@invoice_1.total_revenue}")
+    expect(page).to have_content("Total Discounted Revenue: #{@invoice_1.discounted_revenue}")
+  end
 end
