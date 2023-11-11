@@ -1,0 +1,13 @@
+<%= render partial: "shared/nav" %>
+
+<h2>Edit Bulk Discount</h2>
+
+<%= form_with model: [@merchant, @bulk_discount], method: :patch, data: { turbo: false } do |form| %>
+    <%= form.label :quantity_threshold, "Quantity Threshold" %>
+    <%= form.number_field :quantity_threshold, value: @bulk_discount.quantity_threshold %><br>
+    <%= form.label :percent_discount, "Percent Discount" %>
+    <%= form.number_field :percent_discount, value: @bulk_discount.percent_discount %><br>
+    <div class="actions">
+        <%= form.submit "Submit" %>
+    <div>
+<% end %>

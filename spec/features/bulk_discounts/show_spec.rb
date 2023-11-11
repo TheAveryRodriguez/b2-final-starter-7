@@ -51,10 +51,36 @@ RSpec.describe "merchant bulk discount" do
   describe "US 4 - Bulk Discount Show" do
     describe "When I visit my bulk discount show page" do
       it "I see the bulk discount's quantity threshold and percentage discount" do
-        save_and_open_page
-
         expect(page).to have_content(@bulk_discount_1.quantity_threshold)
         expect(page).to have_content(@bulk_discount_1.percent_discount)
+      end
+    end
+  end
+
+  describe "US 5 - Bulk Discount Edit" do
+    describe "I see a link to edit the bulk discount. When I click this link I am taken to a new page with a form to edit the discount and I see that the discounts current attributes are pre-poluated in the form" do
+      it "When I change any/all of the information and click submit I am redirected to the bulk discount's show page and I see that the discount's attributes have been updated" do
+        expect(page).to have_content(@bulk_discount_1.quantity_threshold)
+        expect(page).to have_content(@bulk_discount_1.percent_discount)
+        expect(page).to have_link("Edit Bulk Discount #{@bulk_discount_1.id}")
+
+        click_on("Edit Bulk Discount #{@bulk_discount_1.id}")
+
+        expect(current_path).to eq(edit_merchant_bulk_discount_path(@merchant1, @bulk_discount_1))
+
+        expect(page).to have_content("Quantity Threshold")
+        expect(page).to have_content("Percent Discount")
+
+        fill_in "Quantity Threshold", with: "70"
+        fill_in "Percent Discount", with: "77"
+
+        click_button "Submit"
+
+        expect(current_path).to eq(merchant_bulk_discount_path(@merchant1, @bulk_discount_1))
+
+        expect(page).to have_content("Quantity Threshold: 70")
+        expect(page).to have_content("Percent Discount: 77")
+        expect(page).to have_link("Edit Bulk Discount")
       end
     end
   end
