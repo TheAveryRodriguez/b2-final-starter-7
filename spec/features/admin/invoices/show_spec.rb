@@ -61,12 +61,24 @@ describe "Admin Invoices Index Page" do
 
   it "should have status as a select field that updates the invoices status" do
     within("#status-update-#{@i1.id}") do
-      select("cancelled", :from => "invoice[status]")
+      select("cancelled", from: "invoice[status]")
       expect(page).to have_button("Update Invoice")
       click_button "Update Invoice"
 
       expect(current_path).to eq(admin_invoice_path(@i1))
       expect(@i1.status).to eq("completed")
+    end
+  end
+
+  describe "US 8 - I see total revenue from this invoice" do
+    it "I see the total discounted revenue from this invoice which includess bulk discounts in calc" do
+      @bulk_discount_1 = BulkDiscount.create!(quantity_threshold: 10, percent_discount: 20, merchant_id: @m1.id)
+      @bulk_discount_2 = BulkDiscount.create!(quantity_threshold: 20, percent_discount: 30, merchant_id: @m1.id)
+
+      visit admin_invoice_path(@i1)
+
+      expect(page).to have_content("Total Revenue: $30")
+      expect(page).to have_content("Total Discounted Revenue: $25.20")
     end
   end
 end
