@@ -45,8 +45,11 @@
               <% end %>
               </td>
               <td style="text-align:center">
-              <%= link_to "Bulk Discount #ID"%>
-            </td>
+              <% discount = i.discounted_af %>
+                <% if discount.present? %>
+                  <%= link_to "Bulk Discount #{discount.id}", "/merchants/#{@merchant.id}/bulk_discounts/#{discount.id}" %>
+                <% end %> 
+                  </td>
           </tr>
         </section>
       <% end %>
